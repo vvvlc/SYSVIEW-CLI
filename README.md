@@ -15,6 +15,17 @@ I Factor   256   426   426
 H|Cmd     |ASID|Jobname |JobStat|Type| Jobnr|Stepname|Procstep|JobClass|ClockTime| CPUTime|  CPTime|    CP%| IIPTime|   IIP%| IFATime|   IFA%|EnclTime|  ePct%|   RealStg|   FreeStg|    AuxStg|    WorkSet|    SCMStg|  GRealStg|   GAuxStg    |   IOCount|ASCBEJST|ASCBSRBT|ASCBEATT|TaskOnCP| SRBonCP|ASSTonCP|ASSBPHTM|zIIPPHTM| IFAPHTM|TimezIIP       |zIIPonCP|zIIPENCT|SUPCPENC|ASSBASST|ASSBENCT| TimeIFA| IFAonCP| IFAENCT|IFACPENC|PHTMBase|EnctBase|EIIPBase|EIFABase|ASSBIOCT|ASSBIIPT|zAAPzIIP|     CSA|    E-CSA|     SQA|    E-SQA|     G-CSA|       G-PVT|ASSBJBNI |ASSBJBNS|ASCB    |ASSB    |Description
 D|        |0214|ZEMAN02 |LSW    |TSU | 27050|CATSO   |        |TSU     | 05:15:37|00:03:22|00:03:21| 99.61%|0.788527|  0.39%|        |       |0.882201|  0.44%|  36388864|          |          |   36388864|  14671872|  18321408|              |   3007514|00:03:18|2.821540|0.046862|00:03:18|2.821540|0.000528|0.882201|0.788527|        |               |        |0.788527|0.000188|0.000528|0.093673|        |        |        |        |        |0.092270|0.778720|        |        |0.722679|        |     136|     2456|      96|    10208|   1048576|  1093664768|         |ZEMAN02 |00F0ED00|06A48000|
 ```
+## Installation
+ 1) upload `sysview-cli` to a USS folder that is on `PATH` environment variable. In my case it is `/a/vlcvi01/bin using`. 
+    *  You can use [Zowe CLI](https://zowe.github.io/docs-site/latest/user-guide/cli-usingcli.html) to copy local files to USS
+        ```
+        ~ # zowe files upload file-to-uss sysview-cli /a/vlcvi01/bin/sysview-cli --zosmf-profile ca32
+        success: true        
+        from:    sysview-cli
+        to:      /a/vlcvi01/bin/sysview-cli
+        ```
+    * Or you can use `scp` or `ftp` 
+ 2) issue  `chmod +x /a/vlcvi01/bin/sysview-cli` from USS console.
 ## Usage
 ```
 sysview-cli <SYSVIEW COMMAND>
@@ -48,7 +59,3 @@ This command skips first 8 lines, extracts 4th column
 sysview-cli "ASPERF; SELECT JOBNAME = ZOWE*" | tail +8 | awk -F '|' '{print $4}'
 ```
 **NOTE:** field separator is `|`
-
-## Installation
- 1) upload sysview-cli to a uss folder
- 2) chmod +x sysview-cli

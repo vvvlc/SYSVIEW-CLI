@@ -1,6 +1,14 @@
 /* rexx */
-/*%COPYRIGHT (c) 2019 plape03 and vlcvi01. All rights reserved.       */
-/*----------------------------------------------------------------------
+/*
+ * This program and the accompanying materials are made available under the terms of the
+ * Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Copyright Contributors to the plape03 and vlcvi01.
+ *
+ *----------------------------------------------------------------------
  * Name: SYSVIEW-CLI V 0.1 
  *
  * Author: plape03 and vlcvi01
@@ -11,7 +19,7 @@
  * 2) chmod +x sysview-cli
  *--------------------------------------------------------------------*/
 
-arg ptgrexshStatement 
+arg sysviewrexshStatement 
 if ARG() = 0 then do
     say 'sysview-cli executes a Sysview command like JOBSUM, ...'
     say 'version 0.1'
@@ -40,30 +48,30 @@ if ARG() = 0 then do
     exit 12
 end
 
-ptgrexshPrompt = ">>>"
-ptgrexshError = "!!!"
-call on halt name PTGREXSH_halt
-signal on failure name PTGREXSH_errorHandler
-signal on syntax name PTGREXSH_errorHandler
-PTGREXSH_errorRc = 0
-call SYSVIEWE "*" "C(PROFILE SWITCH DEFAULT;SET APIDLMCHAR |;PREFIX;OWNER;" ptgrexshStatement ") DELIMITER(|) LIMIT(100000) SIZE(100,1320)"
-PTGREXSH_resume:
-exit PTGREXSH_errorRc
+sysviewrexshPrompt = ">>>"
+sysviewrexshError = "!!!"
+call on halt name SYSVIEWREXSH_halt
+signal on failure name SYSVIEWREXSH_errorHandler
+signal on syntax name SYSVIEWREXSH_errorHandler
+SYSVIEWREXSH_errorRc = 0
+call SYSVIEWE "*" "C(PROFILE SWITCH DEFAULT;SET APIDLMCHAR |;PREFIX;OWNER;" sysviewrexshStatement ") DELIMITER(|) LIMIT(100000) SIZE(100,1320)"
+SYSVIEWREXSH_resume:
+exit SYSVIEWREXSH_errorRc
 
-SYSVIEWE: procedure expose GSVXAPIE_APIC ptgrexshPrompt ptgrexshError PTGREXSH_errorRc
+SYSVIEWE: procedure expose GSVXAPIE_APIC sysviewrexshPrompt sysviewrexshError SYSVIEWREXSH_errorRc
     parse arg filter command
 
     address LINK "GSVXRXAA"
     if rc <> 0 then do
         say 'R'rc
         say 'MGSVXRXAA LINK failed'
-        PTGREXSH_errorRc = rc
+        SYSVIEWREXSH_errorRc = rc
         return
     end
 
     address SYSVIEWE command
 
-    PTGREXSH_errorRc = rc
+    SYSVIEWREXSH_errorRc = rc
     say 'R'rc
     do while queued() > 0
         parse pull val
@@ -84,10 +92,10 @@ SYSVIEWE: procedure expose GSVXAPIE_APIC ptgrexshPrompt ptgrexshError PTGREXSH_e
     end
 return
 
-PTGREXSH_errorHandler:
-    PTGREXSH_errorRc = rc
-    say ptgrexshError condition('C')':' 'RC('PTGREXSH_errorRc')'
-    signal PTGREXSH_resume
+SYSVIEWREXSH_errorHandler:
+    SYSVIEWREXSH_errorRc = rc
+    say sysviewrexshError condition('C')':' 'RC('SYSVIEWREXSH_errorRc')'
+    signal SYSVIEWREXSH_resume
 
-PTGREXSH_halt:
+SYSVIEWREXSH_halt:
     exit 0
